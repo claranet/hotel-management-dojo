@@ -8,6 +8,7 @@ import lombok.ToString;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -28,7 +29,7 @@ public class Hotel {
     public List<Booking> getBookingsForRoom(int roomNumber) {
         return bookings.stream()
                 .filter(b -> b.getRoomNumber() == roomNumber)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public void addBooking(Booking booking) {

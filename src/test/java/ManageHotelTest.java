@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -29,7 +28,7 @@ public class ManageHotelTest {
         ROOM = Room.builder().roomNumber(1).capacity(2).price(70).build();
         BOOKING = Booking.builder().reference(0).roomNumber(1).fullName("John Doe").checkInDate(LocalDate.now().plusMonths(2)).checkOutDate(LocalDate.now().plusMonths(2).plusDays(3)).build();
         HOTEL = Hotel.builder()
-                .rooms(List.of(ROOM))
+                .rooms(new ArrayList<>(Collections.singletonList(ROOM)))
                 .bookings(new ArrayList<>(Collections.singletonList(BOOKING))).build();
         MANAGE_HOTEL = ManageHotel.builder()
                 .hotel(HOTEL)
@@ -67,13 +66,13 @@ public class ManageHotelTest {
 
     @Test
     public void should_return_booking_when_search() throws BookingNotFoundException, ParamNotValidException {
-        // the cas if BOOKING with date equals checkInDate
+        // the cas if booking with date equals checkInDate
         Booking result = MANAGE_HOTEL.searchBooking(BOOKING.getRoomNumber(), BOOKING.getFullName(), BOOKING.getCheckInDate());
         assertEquals(BOOKING, result);
-        // the cas if BOOKING with date equals checkOutDate
+        // the cas if booking with date equals checkOutDate
         result = MANAGE_HOTEL.searchBooking(BOOKING.getRoomNumber(), BOOKING.getFullName(), BOOKING.getCheckOutDate());
         assertEquals(BOOKING, result);
-        // the cas if BOOKING with date between checkInDate and checkOutDate
+        // the cas if booking with date between checkInDate and checkOutDate
         result = MANAGE_HOTEL.searchBooking(BOOKING.getRoomNumber(), BOOKING.getFullName(), BOOKING.getCheckInDate().plusDays(1));
         assertEquals(BOOKING, result);
     }
