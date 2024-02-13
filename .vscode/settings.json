@@ -1,4 +1,8 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
-    "java.dependency.packagePresentation": "hierarchical"
+    "java.dependency.packagePresentation": "hierarchical",
+    "workbench.editorAssociations": {
+        "README.md": "vscode.markdown.preview.editor",
+    },
+    "java.compile.nullAnalysis.mode": "automatic"
 }
