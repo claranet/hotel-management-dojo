@@ -7,7 +7,7 @@ Bienvenue dans le Dojo GitHub Copilot pour apprendre à utiliser cette nouvelle 
 ### Prérequis
 Assurez-vous d'avoir installé les outils suivants avant de commencer :
 
-* Java 17
+* Java 8+
 * Visual Studio Code
 * Git
 * Une licence GitHub Copilot
