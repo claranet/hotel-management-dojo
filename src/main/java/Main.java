@@ -1,5 +1,4 @@
 import entities.Booking;
-import entities.Hotel;
 import entities.Room;
 
 import java.time.LocalDate;
@@ -14,7 +13,7 @@ public class Main {
 
     private static final Scanner scanner = new Scanner(in);
 
-    private static final ManageHotel manageHotel = new ManageHotel(Hotel.builder()
+    private static final ManageHotel manageHotel = ManageHotel.builder()
             .rooms(Arrays.asList(
                     Room.builder().roomNumber(1).capacity(2).price(70).build(),
                     Room.builder().roomNumber(2).capacity(2).price(80).build(),
@@ -23,13 +22,13 @@ public class Main {
                     Room.builder().roomNumber(5).capacity(6).price(180).build(),
                     Room.builder().roomNumber(6).capacity(6).price(190).build()))
             .bookings(new ArrayList<>())
-            .build());
+            .build();
 
     public static void main(String[] args) {
         out.println("Welcome to the domains.Hotel domains.Booking System");
         out.println("------");
         out.println("Rooms:");
-        for (Room room : manageHotel.getHotel().getRooms()) {
+        for (Room room : manageHotel.getRooms()) {
             out.println(room.toString());
         }
 
@@ -72,7 +71,7 @@ public class Main {
                     }
                     break;
                 case 4:
-                        manageHotel.getHotel().getBookings().forEach(booking -> {
+                        manageHotel.getBookings().forEach(booking -> {
                             out.println(booking.toString());
                     });
                     break;

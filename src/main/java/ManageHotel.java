@@ -1,19 +1,56 @@
 import entities.Booking;
-import entities.Hotel;
 import entities.Room;
-import exceptions.*;
+import exceptions.BookingNotFoundException;
+import exceptions.ParamNotValidException;
+import exceptions.RoomNotAvailableException;
+import exceptions.RoomNotFoundException;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
 public class ManageHotel {
 
-    private Hotel hotel;
+    @Builder.Default
+    private List<Room> rooms = new ArrayList<>();
+    @Builder.Default
+    private List<Booking> bookings = new ArrayList<>();
+
+    private boolean checkRoomExists(int roomNumber) {
+        return rooms.stream()
+                .anyMatch(r -> r.getRoomNumber() == roomNumber);
+    }
+
+    private List<Booking> getBookingsForRoom(int roomNumber) {
+        return bookings.stream()
+                .filter(b -> b.getRoomNumber() == roomNumber)
+                .collect(Collectors.toList());
+    }
+
+    public boolean checkRoomAvailability(int roomNumber, LocalDate checkInDate, LocalDate checkOutDate) {
+        //get all bookings for this room
+        List<Booking> bookingsForRoom;
+        bookingsForRoom = getBookingsForRoom(roomNumber);
+
+        //check if room is available
+        if(bookingsForRoom.isEmpty()) {
+            return true;
+        }
+        for(Booking booking : bookingsForRoom) {
+            if(((checkInDate.isBefore(booking.getCheckInDate()) || checkInDate.isEqual(booking.getCheckInDate())) && checkOutDate.isAfter(booking.getCheckInDate()))
+                    || ((checkInDate.isBefore(booking.getCheckOutDate())) && (checkOutDate.isAfter(booking.getCheckOutDate()) || checkOutDate.isEqual(booking.getCheckOutDate())))
+                    || ((checkInDate.isAfter(booking.getCheckInDate()) || checkInDate.isEqual(booking.getCheckInDate())) && (checkOutDate.isBefore(booking.getCheckOutDate()) || checkOutDate.isEqual(booking.getCheckOutDate())))) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public Booking searchBooking(int roomNumber, String fullName, LocalDate date) throws BookingNotFoundException, ParamNotValidException {
         //check if param is valid
@@ -24,7 +61,7 @@ public class ManageHotel {
         // TODO : check if room exists
 
         //get all bookings for this room
-        List<Booking> bookingsForRoom = hotel.getBookingsForRoom(roomNumber);
+        List<Booking> bookingsForRoom = getBookingsForRoom(roomNumber);
 
         //search booking
         return bookingsForRoom.stream()
@@ -34,19 +71,19 @@ public class ManageHotel {
                 .orElseThrow(BookingNotFoundException::new);
     }
 
-    public void bookRoom(int roomNumber, LocalDate checkInDate, LocalDate checkOutDate, String fullName) throws RoomNotAvailableException, RoomNotFoundException, BookingNotValidException, ParamNotValidException {
+    public void bookRoom(int roomNumber, LocalDate checkInDate, LocalDate checkOutDate, String fullName) throws RoomNotAvailableException, RoomNotFoundException, ParamNotValidException {
         //check if param is valid
         if (checkInDate == null || checkOutDate == null || fullName == null || fullName.isEmpty() || checkInDate.isAfter(checkOutDate) || checkInDate.isBefore(LocalDate.now()) || checkOutDate.isBefore(LocalDate.now()) || checkInDate.isEqual(checkOutDate)) {
             throw new ParamNotValidException();
         }
 
         //check if room exists
-        if (!hotel.checkRoomExists(roomNumber)) {
+        if (!checkRoomExists(roomNumber)) {
             throw new RoomNotFoundException();
         }
 
         //check if room is available
-        if (!hotel.checkRoomAvailability(roomNumber, checkInDate, checkOutDate)) {
+        if (!checkRoomAvailability(roomNumber, checkInDate, checkOutDate)) {
             throw new RoomNotAvailableException();
         }
 
@@ -60,7 +97,7 @@ public class ManageHotel {
                 .build();
 
         //book room
-        hotel.addBooking(booking);
+        bookings.add(booking);
     }
 
     public void cancelBooking(int reference) {

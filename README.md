@@ -7,14 +7,15 @@ Bienvenue dans le Dojo GitHub Copilot pour apprendre à utiliser cette nouvelle 
 ### Prérequis
 Assurez-vous d'avoir installé les outils suivants avant de commencer :
 
-* Java 17
+* Java 8+
 * Visual Studio Code
 * Git
 * Une licence GitHub Copilot
 
 ## Avant de commencer :
-* Clonez le projet : `git clone https://github.com/landschootl/hotel-management-dojo.git`.
+* Clonez le projet : `git clone https://github.com/claranet/hotel-management-dojo.git`.
 * Ouvrez le dans Visual Studio Code.
+* Installez les dépendances proposées.
 * Installez les dépendances Maven avec la commande `mvn install`.
 * Vous pouvez démarrer le projet (via la classe `Main`) et jouer les tests unitaires (via la classe `ManageHotelTest` ou via la commande `mvn test`).
 
@@ -27,14 +28,14 @@ Utilisez GitHub Copilot pour vous aider à comprendre le code existant.
 ### Exercice 2 : Génération de la javadoc (5 minutes)
 Utilisez GitHub Copilot pour générer la javadoc des différentes classes du projet.
 
-### Exercice 3 : Refactorisation du code (15 minutes)
-Dans l'entitée `Hotel`, il y a une méthode `checkRoomAvailability` qui permet de vérifier si une chambre est disponible à une date donnée. Utilisez GitHub Copilot pour refactoriser le code de la méthode.
-
-### Exercice 4 : Fixation & correction des bugs (15 minutes)
+### Exercice 3 : Fixation & correction des bugs (15 minutes)
 * Sur la méthode `searchBooking` de la classe `ManageHotel`, il y a un bout de code manquant (voir TODO). Utilisez GitHub Copilot pour le générer.
 * Jouez les tests présents dans la classe `ManageHotelTest`. Si il y a des tests qui échoue, utilisez GitHub Copilot pour comprendre le problème et corriger le bug.
 
 Si vous modifiez le code, n'oubliez pas de jouer les tests pour vérifier que vous n'avez pas introduit de nouveaux bugs et de regénérer la javadoc.
+
+### Exercice 4 : Refactorisation du code (15 minutes)
+Dans l'entitée `Hotel`, il y a une méthode `checkRoomAvailability` qui permet de vérifier si une chambre est disponible à une date donnée. Utilisez GitHub Copilot pour refactoriser le code de la méthode.
 
 ### Exercice 5 : Génération des tests unitaires (30 minutes)
 * Générez les tests unitaires pour la méthode `bookRoom` de la classe `ManageHotel` à l'aide de GitHub Copilot. 
