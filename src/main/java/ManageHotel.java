@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 /**
  * This class is used to manage the hotel
- 
  */
 @Getter
 @Builder

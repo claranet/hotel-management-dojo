@@ -2,6 +2,7 @@ import entities.Booking;
 import entities.Room;
 import exceptions.BookingNotFoundException;
 import exceptions.ParamNotValidException;
+import exceptions.RoomNotAvailableException;
 import exceptions.RoomNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ManageHotelTest {
 
@@ -108,5 +108,49 @@ public class ManageHotelTest {
         // the cas if booking with date between checkInDate and checkOutDate
         result = MANAGE_HOTEL.searchBooking(BOOKING.getRoomNumber(), BOOKING.getFullName(), BOOKING.getCheckInDate().plusDays(1));
         assertEquals(BOOKING, result);
+    }
+
+    /**
+     * Test for bookRoom method.
+     */
+
+    @Test
+    public void should_throw_exception_when_book_with_not_valid_param() {
+        // the cas if checkInDate is null
+        assertThrows(ParamNotValidException.class, () -> MANAGE_HOTEL.bookRoom(ROOM.getRoomNumber(), null, BOOKING.getCheckOutDate(), BOOKING.getFullName()));
+        // the cas if checkOutDate is null
+        assertThrows(ParamNotValidException.class, () -> MANAGE_HOTEL.bookRoom(ROOM.getRoomNumber(), BOOKING.getCheckInDate(), null, BOOKING.getFullName()));
+        // the cas if fullName is null
+        assertThrows(ParamNotValidException.class, () -> MANAGE_HOTEL.bookRoom(ROOM.getRoomNumber(), BOOKING.getCheckInDate(), BOOKING.getCheckOutDate(), null));
+        // the cas if fullName is empty
+        assertThrows(ParamNotValidException.class, () -> MANAGE_HOTEL.bookRoom(ROOM.getRoomNumber(), BOOKING.getCheckInDate(), BOOKING.getCheckOutDate(), ""));
+        // the cas if checkInDate is after checkOutDate
+        assertThrows(ParamNotValidException.class, () -> MANAGE_HOTEL.bookRoom(ROOM.getRoomNumber(), BOOKING.getCheckOutDate(), BOOKING.getCheckInDate(), BOOKING.getFullName()));
+        // the cas if checkInDate is before current date
+        assertThrows(ParamNotValidException.class, () -> MANAGE_HOTEL.bookRoom(ROOM.getRoomNumber(), LocalDate.now().minusDays(1), BOOKING.getCheckOutDate(), BOOKING.getFullName()));
+        // the cas if checkOutDate is before current date
+        assertThrows(ParamNotValidException.class, () -> MANAGE_HOTEL.bookRoom(ROOM.getRoomNumber(), BOOKING.getCheckInDate(), LocalDate.now().minusDays(1), BOOKING.getFullName()));
+        // the cas if checkInDate is equal checkOutDate
+        assertThrows(ParamNotValidException.class, () -> MANAGE_HOTEL.bookRoom(ROOM.getRoomNumber(), BOOKING.getCheckInDate(), BOOKING.getCheckInDate(), BOOKING.getFullName()));
+    }
+
+    @Test
+    public void should_throw_exception_when_book_with_not_exist_room() {
+        // the cas if room not exist
+        assertThrows(RoomNotFoundException.class, () -> MANAGE_HOTEL.bookRoom(2, BOOKING.getCheckInDate(), BOOKING.getCheckOutDate(), BOOKING.getFullName()));
+    }
+
+    @Test
+    public void should_throw_exception_when_book_with_not_available_room() {
+        // the cas if room is not available
+        assertThrows(RoomNotAvailableException.class, () -> MANAGE_HOTEL.bookRoom(ROOM.getRoomNumber(), BOOKING.getCheckInDate(), BOOKING.getCheckOutDate(), BOOKING.getFullName()));
+    }
+
+    @Test
+    public void should_book_room_when_valid_params() throws RoomNotAvailableException, RoomNotFoundException, ParamNotValidException {
+        // the cas if all params are valid
+        int initialBookingsSize = MANAGE_HOTEL.getBookings().size();
+        MANAGE_HOTEL.bookRoom(ROOM.getRoomNumber(), BOOKING.getCheckInDate().plusDays(4), BOOKING.getCheckOutDate().plusDays(4), NEW_CUSTOMER_FULLNAME);
+        assertEquals(initialBookingsSize + 1, MANAGE_HOTEL.getBookings().size());
     }
 }
