@@ -55,22 +55,10 @@ public class ManageHotel {
      * @return true if the room is available, false otherwise
      */
     public boolean checkRoomAvailability(int roomNumber, LocalDate checkInDate, LocalDate checkOutDate) {
-        //get all bookings for this room
-        List<Booking> bookingsForRoom;
-        bookingsForRoom = getBookingsForRoom(roomNumber);
+        List<Booking> bookingsForRoom = getBookingsForRoom(roomNumber);
 
-        //check if room is available
-        if(bookingsForRoom.isEmpty()) {
-            return true;
-        }
-        for(Booking booking : bookingsForRoom) {
-            if(((checkInDate.isBefore(booking.getCheckInDate()) || checkInDate.isEqual(booking.getCheckInDate())) && checkOutDate.isAfter(booking.getCheckInDate()))
-                    || ((checkInDate.isBefore(booking.getCheckOutDate())) && (checkOutDate.isAfter(booking.getCheckOutDate()) || checkOutDate.isEqual(booking.getCheckOutDate())))
-                    || ((checkInDate.isAfter(booking.getCheckInDate()) || checkInDate.isEqual(booking.getCheckInDate())) && (checkOutDate.isBefore(booking.getCheckOutDate()) || checkOutDate.isEqual(booking.getCheckOutDate())))) {
-                return false;
-            }
-        }
-        return true;
+        return bookingsForRoom.stream()
+                .noneMatch(booking -> checkInDate.isBefore(booking.getCheckOutDate()) && checkOutDate.isAfter(booking.getCheckInDate()));
     }
 
     /**
@@ -85,7 +73,7 @@ public class ManageHotel {
      */
     public Booking searchBooking(int roomNumber, String fullName, LocalDate date) throws BookingNotFoundException, ParamNotValidException, RoomNotFoundException {
         //check if param is valid
-        if (fullName == null || fullName.isEmpty() || date == null) {
+        if (fullName == null || fullName.isEmpty()  || date == null) {
             throw new ParamNotValidException();
         }
 
