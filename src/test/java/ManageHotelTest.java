@@ -98,7 +98,7 @@ public class ManageHotelTest {
     }
 
     @Test
-    public void should_return_booking_when_search() throws BookingNotFoundException, ParamNotValidException {
+    public void should_return_booking_when_search() throws BookingNotFoundException, ParamNotValidException, RoomNotFoundException {
         // the cas if booking with date equals checkInDate
         Booking result = MANAGE_HOTEL.searchBooking(BOOKING.getRoomNumber(), BOOKING.getFullName(), BOOKING.getCheckInDate());
         assertEquals(BOOKING, result);
